@@ -1,0 +1,11 @@
+.env
+.git
+.venv
+.test-deps
+.audit-deps
+venv
+__pycache__
+*.py[cod]
+data
+tests
+APEX_BOT_CODEX_SPEC.md

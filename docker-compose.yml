@@ -1,0 +1,14 @@
+services:
+  apexbot:
+    build: .
+    container_name: apex-middleman-bot
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_PATH: /app/data/apexbot.sqlite3
+      COMMAND_PREFIX: "!"
+    volumes:
+      - apexbot-data:/app/data
+
+volumes:
+  apexbot-data:
