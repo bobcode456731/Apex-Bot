@@ -145,3 +145,38 @@ It registers all cogs and confirms 30 prefix command roots and zero application/
 - Database resets on deploy: mount the persistent `DATABASE_PATH` or Docker named volume and keep it across image rebuilds.
 
 No bot token or live Discord connection was available in the project folder. Therefore Discord API permissions, role/channel IDs in the actual server, interactions, message delivery, restart recovery of real Discord components, and moderation/ticket/giveaway/suggestion operations still need a controlled live-server check. See the test run recorded in the delivery response for exact local results.
+
+## HOKAS deployment
+
+This repository is laid out for deployment from its root. In HOKAS, select the Python 3.12 runtime, connect bobcode456731/Apex-Bot on branch main, and leave the repository directory (DIR) blank. The server working directory should be /home/container.
+
+Configure the dependency install/build command as:
+
+~~~sh
+pip install --no-cache-dir -r requirements.txt
+~~~
+
+Configure the startup command as:
+
+~~~sh
+python main.py
+~~~
+
+The root launcher adds the repository root to Python's import path, so PYTHONPATH is not needed. Do not set the startup command to apexbot/main.py.
+
+Add these values in HOKAS environment variables (store the token as a secret):
+
+- DISCORD_TOKEN: your bot token, entered only in the HOKAS secret settings.
+- DATABASE_PATH: /home/container/data/apexbot.sqlite3
+- COMMAND_PREFIX: !
+- LOG_RETENTION_DAYS: 180
+
+The bot creates the parent folder for the SQLite database. Ensure /home/container/data is on storage that HOKAS retains across restarts and GitHub redeployments. Keep the same database path to preserve tickets, settings, warnings, votes, and audit records.
+
+If HOKAS has no separate install/build command, use this as a fallback startup command to force dependency installation:
+
+~~~sh
+pip install --no-cache-dir -r requirements.txt && python main.py
+~~~
+
+That fallback installs packages on every process start. Prefer a separate install/build step when the panel provides one. HOKAS documents GitHub deployment and dashboard environment variables; the dependency-install setting itself must be confirmed in your server panel.
