@@ -14,5 +14,4 @@ RUN pip install --no-cache-dir -r requirements.txt \
 COPY --chown=botuser:botuser apexbot ./apexbot
 COPY --chown=botuser:botuser main.py ./main.py
 USER botuser
-VOLUME ["/app/data"]
 CMD ["python", "main.py"]
